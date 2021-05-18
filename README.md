@@ -1,2 +1,2 @@
 # blog
-blog app for portfolio
+react-native app for portfolio
