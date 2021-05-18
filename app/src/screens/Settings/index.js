@@ -1,12 +1,18 @@
 import React, {useState} from 'react';
-import {View, Text, BackHandler, Alert} from 'react-native';
-import {LoadingScreen} from 'components';
+import {View, BackHandler, Alert, StyleSheet} from 'react-native';
+import {LoadingScreen, Button} from 'components';
 import {useFocusEffect} from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 export default props => {
+  const {navigation} = props;
   const [isLoading, setLoading] = useState(false);
-
+  const logout = async () => {
+    await GoogleSignin.revokeAccess();
+    await GoogleSignin.signOut();
+    navigation.navigate('Login');
+  };
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
@@ -41,7 +47,25 @@ export default props => {
     <LoadingScreen />
   ) : (
     <View>
-      <Text>Hello World Home</Text>
+      <View style={styles.logoutContainer}>
+        <Button
+          color={'#f44336'}
+          mode={'contained'}
+          onPress={logout}
+          style={styles.logoutBtnStyle}>
+          {'Logout'}
+        </Button>
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  logoutBtnStyle: {
+    alignSelf: 'stretch',
+    height: 40,
+  },
+  logoutContainer: {
+    paddingVertical: 10,
+  },
+});

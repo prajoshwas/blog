@@ -80,8 +80,10 @@ export default props => {
             payload.isGmail = 1;
             let newResponse = await addNewUser(payload);
             if (newResponse.data.message === 'Successfully saved') {
-              navigation.navigate('Main');
+              navigation.navigate('Main', userInfo);
             }
+          } else {
+            navigation.navigate('Main', userInfo);
           }
         }
       }
@@ -126,7 +128,6 @@ export default props => {
                 );
                 SplashScreen.hide();
               } else {
-                console.log('HERE');
                 navigation.navigate('Main', currentUser);
               }
             }

@@ -10,8 +10,13 @@ import {
 } from 'react-native';
 import {LoadingScreen} from 'components';
 import {useFocusEffect} from '@react-navigation/native';
-import {Paragraph, Dialog, Portal} from 'react-native-paper';
-import {Icon, Screen, Button, TextInput, FAB, Text} from 'components';
+import {
+  Paragraph,
+  Dialog,
+  Portal,
+  TextInput as CustomTextInput,
+} from 'react-native-paper';
+import {Icon, Screen, Button, TextInput, FAB, Text, Spacer} from 'components';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import SplashScreen from 'react-native-splash-screen';
@@ -38,6 +43,30 @@ export default props => {
   const showAlert = (message, title = 'Oops!') => {
     Alert.alert(title, message, [{}]);
   };
+
+  const links = [
+    {
+      name: 'facebook-messenger',
+      type: 'mdi',
+      label: 'messenger',
+      id: 1,
+      color: '#006AFF',
+    },
+    {
+      name: 'twitter',
+      type: 'mdi',
+      label: 'twitter',
+      id: 2,
+      color: '#1DA1F2',
+    },
+    {
+      name: 'instagram',
+      type: 'mdi',
+      label: 'instagram',
+      id: 3,
+      color: '#F56040',
+    },
+  ];
 
   const fabOnClick = () => {
     setDisabled(!disabled);
@@ -112,7 +141,10 @@ export default props => {
     <LoadingScreen />
   ) : (
     <Screen style={styles.layout}>
-      <ScrollView style={styles.scViewStyle}>
+      <ScrollView
+        style={styles.scViewStyle}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="never">
         <View style={styles.imageStyle}>
           {photo ? (
             <Image source={{uri: photo}} style={styles.image} />
@@ -145,7 +177,9 @@ export default props => {
         </View>
         <View style={styles.fieldsContainer}>
           <View style={styles.labelContainerStyle}>
-            <Text style={styles.labelStyle}>{'Personal Info'}</Text>
+            <Text style={styles.labelStyle} b>
+              {'Personal Info'}
+            </Text>
           </View>
           <View style={styles.inputContainerStyle}>
             <TextInput
@@ -194,7 +228,33 @@ export default props => {
             />
           </View>
         </View>
+        <View style={styles.fieldsContainer}>
+          <Text style={styles.labelStyle} b>
+            Social Media Links
+          </Text>
+          {links.map((item, idx) => (
+            <View key={item.id} style={styles.linkStyle}>
+              <View>
+                <CustomTextInput
+                  label={item.label}
+                  mode={'flat'}
+                  disabled={disabled}
+                  autoCapitalize="none"
+                  style={styles.namesInputStyle}
+                  left={
+                    <CustomTextInput.Icon
+                      name={item.name}
+                      size={34}
+                      color={item.color}
+                    />
+                  }
+                />
+              </View>
+            </View>
+          ))}
+        </View>
       </ScrollView>
+      <Spacer md />
       <FAB style={styles.fab} icon={fabIcon} onPress={fabOnClick} />
     </Screen>
   );
@@ -205,6 +265,10 @@ const styles = StyleSheet.create({
     flex: 1,
     display: 'flex',
     justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  linkStyle: {
+    padding: 10,
   },
   addBtnStyle: {
     width: 150,
@@ -221,8 +285,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.3)',
     borderRadius: 5,
-    padding: 10,
-    marginTop: 10,
+    padding: 15,
+    marginTop: 5,
   },
   labelStyle: {
     fontSize: 20,
@@ -239,9 +303,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
   },
   imageStyle: {
     alignItems: 'center',
@@ -251,7 +315,7 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
-    margin: 30,
+    margin: 20,
     right: 0,
     bottom: 0,
     backgroundColor: '#000',
