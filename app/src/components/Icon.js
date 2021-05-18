@@ -47,7 +47,7 @@ const Icon = ({name, color, size, type, style}) => {
     }
   };
 
-  return <View style={style}>{renderIcon()}</View>;
+  return <View>{renderIcon()}</View>;
 };
 
 export default Icon;

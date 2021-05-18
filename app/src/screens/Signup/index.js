@@ -6,11 +6,11 @@ import {useFocusEffect} from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default props => {
-  const {navigation} = props;
+  //const {navigation} = props;
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  //const [password, setPassword] = useState('');
   const [birthday, setBirthday] = useState('');
-  const [visible, setVisible] = useState(true);
+  //const [visible, setVisible] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
 
@@ -20,20 +20,15 @@ export default props => {
   };
   const Login = async () => {
     setLoading(true);
-    if (
-      !username ||
-      !password ||
-      regex.test(username) ||
-      regex.test(password)
-    ) {
+    if (!username || regex.test(username)) {
       setLoading(false);
       return showAlert('Please enter username and password');
     } else {
       try {
-        let payload = {
+        /*   let payload = {
           username: username,
           password: password,
-        };
+        }; */
 
         setLoading(false);
       } catch (error) {

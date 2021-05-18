@@ -6,5 +6,16 @@ import Screen from './Screen';
 import Icon from './Icon';
 import Spinner from './Spinner';
 import Spacer from './Spacer';
+import FAB from './FAB';
 
-export {LoadingScreen, Button, Text, TextInput, Screen, Icon, Spinner, Spacer};
+export {
+  LoadingScreen,
+  Button,
+  Text,
+  TextInput,
+  Screen,
+  Icon,
+  Spinner,
+  Spacer,
+  FAB,
+};

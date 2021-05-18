@@ -10,17 +10,14 @@ export default props => {
       screenOptions={({route}) => ({
         tabBarIcon: ({focused, color, size}) => {
           let iconName, type;
-
           if (route.name === 'Home') {
-            iconName = focused
-              ? 'ios-information-circle'
-              : 'ios-information-circle-outline';
+            iconName = focused ? 'home-sharp' : 'home-outline';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'user-circle-o' : 'user-circle';
             type = 'fa';
-          } else if (route.name === 'Settings') { 
+          } else if (route.name === 'Settings') {
             iconName = 'gear';
-            type = focused? 'fa' : 'ev';
+            type = focused ? 'fa' : 'ev';
           }
           // You can return any component that you like here!
           return <Icon type={type} name={iconName} size={size} color={color} />;
@@ -34,7 +31,11 @@ export default props => {
         },
       }}>
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        initialParams={props.route.params.user}
+      />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
   );

@@ -126,7 +126,8 @@ export default props => {
                 );
                 SplashScreen.hide();
               } else {
-                navigation.navigate('Main');
+                console.log('HERE');
+                navigation.navigate('Main', currentUser);
               }
             }
           } else {
