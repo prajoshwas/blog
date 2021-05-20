@@ -19,16 +19,15 @@ import {
 import {Icon, Screen, Button, TextInput, FAB, Text, Spacer} from 'components';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import SplashScreen from 'react-native-splash-screen';
 
 export default props => {
-  const [isLoading, setLoading] = useState(false);
-  const [firstName, setFirstName] = useState(props.route.params.givenName);
-  const [lastName, setLastName] = useState(props.route.params.familyName);
-  const [email, setEmail] = useState(props.route.params.email);
+  
+  const [firstName, setFirstName] = useState(props.route.params?.givenName);
+  const [lastName, setLastName] = useState(props.route.params?.familyName);
+  const [email, setEmail] = useState(props.route.params?.email);
   const [username, setUsername] = useState('');
   const [disabled, setDisabled] = useState(true);
-  const [photo, setPhoto] = useState(props.route.params.photo);
+  const [photo, setPhoto] = useState(props.route.params?.photo);
   const [fabIcon, setFabIcon] = useState('account-edit');
   const [dialogVisible, setVisible] = useState(false);
 
@@ -123,11 +122,6 @@ export default props => {
         ]);
         return true;
       };
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-        SplashScreen.hide();
-      }, 1000);
 
       const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
@@ -137,9 +131,7 @@ export default props => {
       return () => backHandler.remove();
     }, []),
   );
-  return isLoading ? (
-    <LoadingScreen />
-  ) : (
+  return (
     <Screen style={styles.layout}>
       <ScrollView
         style={styles.scViewStyle}

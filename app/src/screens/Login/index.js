@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Screen, Text} from 'components';
+import {Button, Screen, Text, LoadingScreen} from 'components';
 import {Alert, StyleSheet, TouchableOpacity, View, Image} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {useFocusEffect} from '@react-navigation/native';
@@ -14,6 +14,7 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default props => {
   const {navigation} = props;
@@ -21,7 +22,6 @@ export default props => {
   const [password, setPassword] = useState('');
   const [visible, setVisible] = useState(true);
   const [isLoading, setLoading] = useState(false);
-  const [isGoogleLoading, setGoogleLoad] = useState(false);
   const [disabledBtns, setDisabled] = useState(false);
   const regex = /^\s*$/;
 
@@ -30,7 +30,6 @@ export default props => {
   };
   const Login = async () => {
     setLoading(true);
-
     if (
       !username ||
       !password ||
@@ -47,10 +46,11 @@ export default props => {
           password: password,
         };
         let response = await checkUserInfo(payload);
-        if (response.isError) {
+        if (response.error && response.message === 'Record Not Found') {
+          response.message = "Incorrect Username or Password";
           throw response;
         }
-        navigation.navigate('Home');
+        navigation.navigate('Main');
         setLoading(false);
         setDisabled(false);
       } catch (error) {
@@ -61,7 +61,7 @@ export default props => {
   };
 
   const signin = async () => {
-    setGoogleLoad(true);
+    setLoading(true);
     setDisabled(true);
     try {
       await GoogleSignin.hasPlayServices();
@@ -69,15 +69,17 @@ export default props => {
       if (userInfo) {
         let payload = {
           email: userInfo.user.email,
+          username: null,
+          password: null,
+          isGmail: 1,
         };
         let response = await signInWithGoogle(payload);
-        if (response.isError) {
+        if (response.error) {
           await GoogleSignin.revokeAccess();
           await GoogleSignin.signOut();
           throw response;
         } else {
-          if (response.message === 'Record Not found') {
-            payload.isGmail = 1;
+          if (response.message === 'Record Not Found') {
             let newResponse = await addNewUser(payload);
             if (newResponse.data.message === 'Successfully saved') {
               navigation.navigate('Main', userInfo);
@@ -101,7 +103,7 @@ export default props => {
         showAlert(error.message);
       }
     }
-    setGoogleLoad(false);
+    setLoading(false);
     setDisabled(false);
   };
 
@@ -117,7 +119,7 @@ export default props => {
                 email: currentUser.user.email,
               };
               let response = await signInWithGoogle(payload);
-              if (response.isError) {
+              if (response.error) {
                 throw response;
               } else if (response.isNew) {
                 //when user has an existing session but data is deleted from database
@@ -143,7 +145,7 @@ export default props => {
     }, [navigation]),
   );
 
-  return (
+  return isLoading? <LoadingScreen /> : (
     <Screen style={styles.layout}>
       <View style={styles.imageContainer}>
         <Image
@@ -160,7 +162,7 @@ export default props => {
         <TextInput
           label="Username / Email"
           mode={'outlined'}
-          disabled={false}
+          disabled={isLoading}
           value={username}
           autoCapitalize="none"
           onChangeText={val => setUsername(val)}
@@ -171,7 +173,7 @@ export default props => {
           label="Password"
           mode={'outlined'}
           secureTextEntry={visible}
-          disabled={false}
+          disabled={isLoading}
           value={password}
           autoCapitalize="none"
           onChangeText={val => setPassword(val)}
@@ -208,7 +210,7 @@ export default props => {
           size={GoogleSigninButton.Size.Icon}
           color={GoogleSigninButton.Color.Dark}
           onPress={signin}
-          disabled={disabledBtns ? true : isGoogleLoading ? true : false}
+          disabled={isLoading}
         />
       </View>
       <View style={styles.forgotPassContainer}>

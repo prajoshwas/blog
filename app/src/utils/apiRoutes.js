@@ -8,9 +8,7 @@ export async function checkUserInfo(details) {
       data: details,
     };
     let response = await api.post(payload);
-    if (!response.data.error) {
-      return response.data;
-    }
+    return response.data;
   } catch (err) {
     throw error;
   }
@@ -32,6 +30,25 @@ export async function signInWithGoogle(user) {
   }
 }
 
+export async function checkUser(user) {
+  let error = {type: 'app', message: 'Something went wrong'};
+  try {
+    let payload = {
+      route: 'normal-check-user',
+      data: user,
+    };
+    let response = await api.post(payload);
+    if (!response.data.error) {
+      return response.data;
+    } else { 
+      return response;
+    }
+  } catch (err) {
+    throw error;
+  }
+}
+
+
 export async function addNewUser(user) {
   let error = {type: 'app', message: 'Something went wrong'};
   try {
@@ -41,7 +58,7 @@ export async function addNewUser(user) {
     };
     let response = await api.post(payload);
     if (!response.data.error) {
-      return response;
+      return response.data;
     }
   } catch (err) {
     throw error;

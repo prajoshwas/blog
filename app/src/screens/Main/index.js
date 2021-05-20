@@ -34,7 +34,7 @@ export default props => {
       <Tab.Screen
         name="Profile"
         component={Profile}
-        initialParams={props.route.params.user}
+        initialParams={props.route.params?.user}
       />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>

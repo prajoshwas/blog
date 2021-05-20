@@ -11,7 +11,16 @@ export default props => {
   const logout = async () => {
     await GoogleSignin.revokeAccess();
     await GoogleSignin.signOut();
-    navigation.navigate('Login');
+    Alert.alert('Wait!', 'Are you sure you want to log out?', [
+      { text: 'Cancel',
+        onPress: () => null,
+        style: 'cancel',
+      },
+      {
+        text: 'Yes',
+        onPress: () => navigation.navigate('Login'),
+      }
+      ]);
   };
   useFocusEffect(
     React.useCallback(() => {
@@ -29,11 +38,6 @@ export default props => {
         ]);
         return true;
       };
-      setLoading(true);
-      setTimeout(() => {
-        SplashScreen.hide();
-        setLoading(false);
-      }, 1000);
 
       const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
@@ -43,9 +47,7 @@ export default props => {
       return () => backHandler.remove();
     }, []),
   );
-  return isLoading ? (
-    <LoadingScreen />
-  ) : (
+  return (
     <View>
       <View style={styles.logoutContainer}>
         <Button
