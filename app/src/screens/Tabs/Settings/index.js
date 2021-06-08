@@ -1,26 +1,26 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, BackHandler, Alert, StyleSheet} from 'react-native';
-import {LoadingScreen, Button} from 'components';
+import {Button} from 'components';
 import {useFocusEffect} from '@react-navigation/native';
-import SplashScreen from 'react-native-splash-screen';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default props => {
   const {navigation} = props;
-  const [isLoading, setLoading] = useState(false);
   const logout = async () => {
-    await GoogleSignin.revokeAccess();
-    await GoogleSignin.signOut();
     Alert.alert('Wait!', 'Are you sure you want to log out?', [
-      { text: 'Cancel',
-        onPress: () => null,
-        style: 'cancel',
-      },
+      {text: 'Cancel', onPress: () => null, style: 'cancel'},
       {
         text: 'Yes',
-        onPress: () => navigation.navigate('Login'),
-      }
-      ]);
+        onPress: removeAccessAndPhoto,
+      },
+    ]);
+  };
+
+  const removeAccessAndPhoto = async () => {
+    await GoogleSignin.revokeAccess();
+    await GoogleSignin.signOut();
+    await AsyncStorage.removeItem('profilePicture');
+    navigation.navigate('Login');
   };
   useFocusEffect(
     React.useCallback(() => {

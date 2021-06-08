@@ -7,6 +7,9 @@ import Icon from './Icon';
 import Spinner from './Spinner';
 import Spacer from './Spacer';
 import FAB from './FAB';
+import Appbar from './Appbar';
+import IconButton from './IconButton';
+import ListItem from './ListItem';
 
 export {
   LoadingScreen,
@@ -15,7 +18,10 @@ export {
   TextInput,
   Screen,
   Icon,
+  IconButton,
   Spinner,
   Spacer,
   FAB,
+  Appbar,
+  ListItem,
 };

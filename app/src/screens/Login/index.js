@@ -47,10 +47,10 @@ export default props => {
         };
         let response = await checkUserInfo(payload);
         if (response.error && response.message === 'Record Not Found') {
-          response.message = "Incorrect Username or Password";
+          response.message = 'Incorrect Username or Password';
           throw response;
         }
-        navigation.navigate('Main');
+        navigation.navigate('Drawer');
         setLoading(false);
         setDisabled(false);
       } catch (error) {
@@ -82,10 +82,10 @@ export default props => {
           if (response.message === 'Record Not Found') {
             let newResponse = await addNewUser(payload);
             if (newResponse.data.message === 'Successfully saved') {
-              navigation.navigate('Main', userInfo);
+              navigation.navigate('Drawer', userInfo);
             }
           } else {
-            navigation.navigate('Main', userInfo);
+            navigation.navigate('Drawer', userInfo);
           }
         }
       }
@@ -130,7 +130,7 @@ export default props => {
                 );
                 SplashScreen.hide();
               } else {
-                navigation.navigate('Main', currentUser);
+                navigation.navigate('Drawer', currentUser);
               }
             }
           } else {
@@ -145,7 +145,9 @@ export default props => {
     }, [navigation]),
   );
 
-  return isLoading? <LoadingScreen /> : (
+  return isLoading ? (
+    <LoadingScreen />
+  ) : (
     <Screen style={styles.layout}>
       <View style={styles.imageContainer}>
         <Image

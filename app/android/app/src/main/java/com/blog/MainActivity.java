@@ -17,4 +17,8 @@ public class MainActivity extends ReactActivity {
   protected String getMainComponentName() {
     return "blog";
   }
+  @Override
+  public void invokeDefaultOnBackPressed() {
+    moveTaskToBack(true);
+  }
 }

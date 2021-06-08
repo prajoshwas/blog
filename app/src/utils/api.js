@@ -34,6 +34,8 @@ export default {
     callAPI('post', baseUrl, route, data),
   put: async ({baseUrl = null, route, data = null}) =>
     callAPI('put', baseUrl, route, data),
+  patch: async ({baseUrl = null, route, data = null}) =>
+    callAPI('patch', baseUrl, route, data),
   delete: async ({baseUrl = null, route, data = null}) =>
     callAPI('delete', baseUrl, route, data),
   get: async ({baseUrl = null, route}) => callAPI('get', baseUrl, route, null),

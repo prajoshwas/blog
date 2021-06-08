@@ -2,16 +2,19 @@ import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Icon} from 'components';
 import {Home, Profile, Settings} from 'screens';
+import Appbar from '../../components/Appbar';
 
 export default props => {
   const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator
+      initialRouteName="Blogs"
       screenOptions={({route}) => ({
         tabBarIcon: ({focused, color, size}) => {
           let iconName, type;
-          if (route.name === 'Home') {
-            iconName = focused ? 'home-sharp' : 'home-outline';
+          if (route.name === 'Blogs') {
+            iconName = focused ? 'newspaper-variant' : 'newspaper';
+            type = 'mdi';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'user-circle-o' : 'user-circle';
             type = 'fa';
@@ -30,11 +33,11 @@ export default props => {
           backgroundColor: '#000',
         },
       }}>
-      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Blogs" component={Home} />
       <Tab.Screen
         name="Profile"
         component={Profile}
-        initialParams={props.route.params?.user}
+        initialParams={props.route.params}
       />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>

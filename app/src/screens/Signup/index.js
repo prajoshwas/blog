@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Screen, Text} from 'components';
-import {Alert, StyleSheet, View, ScrollView, StatusBar, Image} from 'react-native';
+import {Alert, StyleSheet, View, ScrollView, Image} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {useFocusEffect} from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -11,8 +11,6 @@ export default props => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  //const [birthday, setBirthday] = useState('');
-  //const [visible, setVisible] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
 
@@ -32,7 +30,7 @@ export default props => {
           username: username,
           password: password,
           email: email,
-        }; 
+        };
         let user = await checkUser(payload);
         setLoading(false);
       } catch (error) {
@@ -53,7 +51,6 @@ export default props => {
     } else {
       //if set
       setShow(false);
-      setBirthday(selectedDate.toLocaleDateString());
     }
   };
 
@@ -65,7 +62,9 @@ export default props => {
 
   return (
     <Screen style={styles.layout}>
-      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.layout}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={styles.layout}>
         <View style={styles.imageContainer}>
           <Image
             source={require('../../assets/logo.png')}
@@ -85,10 +84,7 @@ export default props => {
             value={username}
             autoCapitalize="none"
             onChangeText={val => setUsername(val)}
-            left={<TextInput.Icon 
-                  name="face"
-                  size={30}
-                  color={'#000'}/>}
+            left={<TextInput.Icon name="face" size={30} color={'#000'} />}
           />
         </View>
         <View style={styles.inputContainerStyle}>
@@ -100,11 +96,9 @@ export default props => {
             autoCapitalize="none"
             secureTextEntry={true}
             onChangeText={val => setPassword(val)}
-            left={<TextInput.Icon 
-              name="lock"
-              color={'#000'}/>}
+            left={<TextInput.Icon name="lock" color={'#000'} />}
           />
-        {/*   <TextInput
+          {/*   <TextInput
             label="Birthday"
             mode={'outlined'}
             disabled={false}
@@ -121,17 +115,14 @@ export default props => {
           /> */}
         </View>
         <View style={styles.inputContainerStyle}>
-        <TextInput
+          <TextInput
             label="Email"
             mode={'outlined'}
             disabled={false}
             value={email}
             autoCapitalize="none"
             onChangeText={val => setEmail(val)}
-            left={<TextInput.Icon 
-              name="email"
-              size={30}
-              color={'#000'}/>}
+            left={<TextInput.Icon name="email" size={30} color={'#000'} />}
           />
         </View>
         <View style={styles.loginBtnContainer}>

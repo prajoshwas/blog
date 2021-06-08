@@ -8,7 +8,6 @@ import {
   StatusBar,
   Image,
 } from 'react-native';
-import {LoadingScreen} from 'components';
 import {useFocusEffect} from '@react-navigation/native';
 import {
   Paragraph,
@@ -16,21 +15,30 @@ import {
   Portal,
   TextInput as CustomTextInput,
 } from 'react-native-paper';
-import {Icon, Screen, Button, TextInput, FAB, Text, Spacer} from 'components';
+import {
+  Icon,
+  Screen,
+  Button,
+  TextInput,
+  FAB,
+  Text,
+  Spacer,
+  LoadingScreen,
+} from 'components';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default props => {
-  
   const [firstName, setFirstName] = useState(props.route.params?.givenName);
   const [lastName, setLastName] = useState(props.route.params?.familyName);
   const [email, setEmail] = useState(props.route.params?.email);
   const [username, setUsername] = useState('');
   const [disabled, setDisabled] = useState(true);
-  const [photo, setPhoto] = useState(props.route.params?.photo);
+  const [photo, setPhoto] = useState('');
   const [fabIcon, setFabIcon] = useState('account-edit');
   const [dialogVisible, setVisible] = useState(false);
-
+  const [isLoading, setLoading] = useState(false);
   const options = {
     mediaType: 'photo',
     maxWidth: 200,
@@ -98,16 +106,21 @@ export default props => {
     launchImageLibrary(options, handlePhoto);
   };
 
-  const handlePhoto = response => {
+  const handlePhoto = async response => {
     if (response.didCancel) {
       return;
     }
+    await AsyncStorage.setItem(
+      'profilePicture',
+      'data:image/png;base64,' + response.base64,
+    );
     let image = 'data:image/png;base64,' + response.base64;
     setPhoto(image);
   };
 
   useFocusEffect(
     React.useCallback(() => {
+      setLoading(true);
       const backAction = () => {
         Alert.alert('Wait!', 'Are you sure you want to exit the app?', [
           {
@@ -123,15 +136,31 @@ export default props => {
         return true;
       };
 
+      const init = async () => {
+        const savedLocalPhoto = await AsyncStorage.getItem('profilePicture');
+        if (savedLocalPhoto) {
+          setPhoto(savedLocalPhoto);
+        } else if (props.route.params.photo) {
+          await AsyncStorage.setItem(
+            'profilePicture',
+            props.route.params.photo,
+          );
+          setPhoto(props.route.params.photo);
+        }
+      };
+
+      init();
       const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
         backAction,
       );
-
+      setLoading(false);
       return () => backHandler.remove();
-    }, []),
+    }, [props.route.params.photo]),
   );
-  return (
+  return isLoading ? (
+    <LoadingScreen />
+  ) : (
     <Screen style={styles.layout}>
       <ScrollView
         style={styles.scViewStyle}
@@ -149,7 +178,8 @@ export default props => {
             color={'#000'}
             mode={'contained'}
             onPress={addPhoto}
-            style={styles.addBtnStyle}>
+            style={styles.addBtnStyle}
+            disabled={disabled}>
             {photo ? 'Change' : 'Add'}
           </Button>
           <Portal>

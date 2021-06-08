@@ -21,6 +21,10 @@ export default props => {
   } else if (props.sm) {
     style.fontSize = 16;
   }
+
+  if (props.b) {
+    style.fontWeight = '700';
+  }
   return (
     <Text {...props} style={{...style, ...props.style}}>
       {props.children}
